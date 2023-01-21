@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Seymour+One&family=Sono:wght@200&family=Unbounded&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="stylePhone.css">
+</head>
+<body>
+    <header>
+        <article>dvoryashin</article>
+    </header>
+    <canvas id="myChart"></canvas>
+    <div id="app">
+
+        <main class="kvInput">
+            <div class="tit">Ваши поля</div>
+            <div class="pairs">
+                <div class="pairOwn">
+                    <input type="text" id="first" class="pairFirst">
+                    <input type="text" id="second" class="pairSecond">
+                    <div class="minus">-</div>
+                </div>
+            </div>
+            <div class="inputs">
+                <div class="pair" v-for="inpits in input">
+                    <input type="text" class="pairFirst">
+                    <input type="text" class="pairSecond">
+                    <input type="button" class="minus" onclick="valueFind()" >
+                </div>
+            </div>
+            <div class="button_plus" v-on:click="addInput">
+                <div class="plus">+</div>
+            </div>
+
+            <input type="button" value="CREATE A CHART" class="createChart" onclick="valueFind()">
+        </main>
+    </div>
+    <input type="button" onclick="download()" value="Скачать график">>
+</body>
+<script>
+    function valueFind(){
+        var valuesY = [];
+        var valuesX = [];
+
+        var inputs = document.querySelectorAll('.inputs')[0].children.length;
+        localStorage.setItem('inputs', inputs);
+        // setInterval(valueFind, 500);
+        valuesX[0] = document.querySelector("#second").value;
+        valuesY[0] = document.querySelector('#first').value;
+
+        for(var i = 1; i <= inputs; i++){
+            var firstInput = document.querySelectorAll('.pairFirst')[i].value;
+            console.log(firstInput);
+            valuesY[i] = firstInput;
+            var secondInput = document.querySelectorAll('.pairSecond')[i].value;
+            valuesX[i] = secondInput;
+            // сonsole.log(secondInput);
+        }
+        // valuesX.splice(0, 1);
+        // valuesY.splice(0, 1);
+        console.log(valuesX + 'x');
+        console.log(valuesY + 'y');
+        localStorage.setItem("x", JSON.stringify(valuesX));
+        localStorage.setItem("y", JSON.stringify(valuesY));
+        localStorage.setItem("input", inputs + 1);
+        window.location.href = 'index.html';
+        // window.location.reload();
+
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+
+        function getValues(){
+            valuesY = JSON.parse(localStorage.getItem("x"));
+            valuesX = JSON.parse(localStorage.getItem("y"));
+            var inputs = localStorage.getItem('inputs');
+        // setInterval(valueFind, 500);
+            for(var i = 1; i <= inputs; i++){
+                var firstInput = document.querySelectorAll('.pairFirst')[i].value;
+                console.log(firstInput);
+                valuesY[i] = firstInput;
+                var secondInput = document.querySelectorAll('.pairSecond')[i].value;
+                valuesX[i] = secondInput;
+                // сonsole.log(secondInput);
+            }
+        }
+        getValues();
+
+        new Chart(
+            document.querySelector('#myChart'),
+            {
+                type: 'line',
+                data: {
+                labels: valuesY,
+                datasets: [
+                    {
+                        label: 'Books bought',
+                        data: valuesX,
+                        borderColor: 'teal',
+                        borderWidth: 5,
+                        backgroundColor: 'teal',
+                        cubicInterpolationMode: 'monotone',
+                        borderWidth: 2
+                    }
+                ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        );
+    })
+    var app = new Vue({
+        el: '#app',
+        data: {
+            input: new Array(localStorage.getItem('inputs')),
+            inputPlus: 0,
+        },
+        methods: {
+            addInput(){
+                this.input.push("dd");
+            },
+        }
+    });
+    var download = function(){
+        var link = document.createElement('a');
+        link.download = 'filename.png';
+        link.href = document.getElementById('myChart').toDataURL()
+        link.click();
+    }
+</script>
+</html>
