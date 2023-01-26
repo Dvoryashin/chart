@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Seymour+One&family=Sono:wght@200&family=Unbounded&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="stylePhone.css">
+</head>
+<body>
+    <header>
+        <article>dvoryashin</article>
+    </header>
+    <canvas id="myChart"></canvas>
+    <canvas style="display: none; width: 200vw;" id="myChartDownload"></canvas>
+    <input type="button" onclick="download()" class="download" value="Скачать график">
+    <div id="app">
+        <main class="kvInput">
+            <div class="tit">Ваши поля</div>
+            <!-- <div class="pairs">
+                <div class="pairOwn">
+                    <input type="text" class="pairFirst">
+                    <input type="text" class="pairSecond">
+                </div>
+            </div> -->
+            <div class="inputs">
+                <!-- <div class="pair">
+                    <input type="text" class="pairFirst">
+                    <input type="text" class="pairSecond">
+                    <input type="button" onclick="valueFind()">
+                </div> -->
+            </div>
+            <div class="button_plus" onclick="appendInput()">
+                <div class="plus">+</div>
+            </div>
+            <input type="button" value="Save" class="createChart" onclick="valueFind()">
+            <!-- <div class="empty"></div> -->
+        </main>
+    </div>
+    <div class="empty"></div>
+</body>
+<script>
+    // var pairs = document.querySelectorAll('.inputs')[0].children.length;
+    // var valuesY = [];
+    // var valuesX = [];
+    // // setInterval(valueFind, 500);
+
+    // var inputs = document.querySelectorAll('.inputs')[0].children.length;
+    // for(var i = 0; i <= inputs; i++){
+                
+    //     var firstInput = document.querySelectorAll('.pair_first')[i].value;
+    //     console.log(firstInput);
+    //     valuesY[i] = firstInput;
+    //     var secondInput = document.querySelectorAll('.pair_second')[i].value;
+    //     valuesX[i] = secondInput;
+    //     сonsole.log(secondInput);
+    // }
+    // valuesX.splice(0, 1);
+    // valuesY.splice(0, 1);
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        var inputSum = localStorage.getItem("inputs");
+        var inputs = document.querySelector(".inputs");
+        console.log(inputSum);
+        var valuesY = JSON.parse(localStorage.getItem("x"));
+        var valuesX = JSON.parse(localStorage.getItem("y"));
+        console.log(valuesX);
+        console.log(valuesY);
+        for(var i = 0; i <= inputSum; i++){
+            var div = document.createElement('div');
+            div.className = "pair";
+            div.innerHTML = "<input type='text' value='" + valuesX[i] +"' class='pairFirst'><button class='btnMinus' onclick='this.parentNode.remove()'>-</button><input type='text' value='"+ valuesY[i] +"' class='pairSecond'>";
+
+            inputs.append(div);
+        }
+        new Chart(
+            document.querySelector('#myChart'),
+            {
+                type: 'line',
+                data: {
+                labels: valuesY,
+                datasets: [
+                    {
+                        label: '',
+                        data: valuesX,
+                        borderColor: 'teal',
+                        borderWidth: 5,
+                        backgroundColor: 'teal',
+                        borderWidth: 2
+                    }
+                ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        );
+        new Chart(
+            document.querySelector('#myChartDownload'),
+            {
+                type: 'line',
+                data: {
+                labels: valuesY,
+                datasets: [
+                    {
+                        label: '',
+                        data: valuesX,
+                        borderColor: 'teal',
+                        borderWidth: 5,
+                        backgroundColor: 'teal',
+                        borderWidth: 2
+                    }
+                ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        );
+        var lastPair = inputs.lastChild;
+        var lastInputValue = lastPair.querySelectorAll('input')[0].value;
+        console.log(lastInputValue);
+        if(lastInputValue === "undefined"){
+            lastPair.remove();
+        }
+    })  
+
+    function appendInput(){
+        var inputs = document.querySelector(".inputs");
+        var div = document.createElement('div');
+        div.className = "pair";
+        div.innerHTML = '<input type="text" class="pairFirst"><button class="btnMinus" onclick="this.parentNode.remove()">-</button><input type="text" class="pairSecond">';
+
+        inputs.append(div);
+    }
+
+    document.addEventListener('click',function(e){
+        if(e.target == '<input type="button">'){
+            valueFind();
+        }
+    })
+
+    function valueFind(){
+        var valuesY2 = new Array();
+        var valuesX2 = new Array();
+        var input = document.querySelector(".inputs");
+        var inputs = input.children.length;
+        // localStorage.setItem('inputs', inputs);
+        // setInterval(valueFind, 500);
+        // valuesX[0] = document.querySelector("#second").value;
+        // valuesY[0] = document.querySelector('#first').value;
+
+        for(var i = 0; i < inputs; i++){
+            var firstInput = input.querySelectorAll(".pairFirst")[i].value;
+            console.log(firstInput);
+            valuesY2[i] = firstInput;
+            var secondInput = document.querySelectorAll(".pairSecond")[i].value;
+            valuesX2[i] = secondInput;
+            console.log(valuesX2[i]);
+            // сonsole.log(secondInput);
+        }
+        // valuesX.splice(0, 1);
+        // valuesY.splice(0, 1);
+        console.log(valuesX2);
+        localStorage.setItem("x", JSON.stringify(valuesX2));
+        localStorage.setItem("y", JSON.stringify(valuesY2));
+        localStorage.setItem("inputs", inputs);
+        // window.location.href = 'index2.html';
+        window.location.reload();
+
+    }
+    var app = new Vue({
+        el: '#app',
+        data: {
+            input: [],
+            inputPlus: 0,
+        },
+        methods: {
+            addInput(){
+                this.input.push("dd");
+            },
+        }
+    });
+    var download = function(){
+        var link = document.createElement('a');
+        link.download = 'filename.png';
+        link.href = document.getElementById('myChartDownload').toDataURL()
+        link.click();
+    }
+</script>
+</html>

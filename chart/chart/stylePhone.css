@@ -1,0 +1,72 @@
+/* @media screen and (max-width: 900px) {
+    
+    
+    .pair{
+        margin: 0 auto;
+    }
+} */
+
+/* @media screen and (max-width: 366px) {
+    
+    
+    .pair{
+        margin: 0 auto;
+        margin-bottom: -10vw;
+    }
+} */
+
+@media screen and (max-width: 955px) {
+    
+    
+    .kvInput{
+        position: relative;
+        /* margin-top: calc(3vw + 2vh); */
+        background: rgb(219, 219, 219, 0.5);
+        width: 95vw;
+    }
+    .pairFirst, .pairSecond {
+        width: 30vw;
+        height: 3vw;
+    }
+    .pairFirst{
+        margin-right: 4vw;
+    }
+    .pairSecond{
+        margin-left: 4vw;
+    }
+    .btnMinus{
+        width: 5vw;
+        height: 5vw;
+        font-size: 4vw;
+    }
+    .createChart{
+        width: 95vw;
+    }
+    .button_plus{
+        width: 95vw;
+    }
+    #myChart{
+        left: 0;
+        margin-left: 0;
+    }
+    .download{
+        transform: rotate(0deg);
+        transform-origin: 0% 100%;
+        height: calc(2vw + 2vh);
+        position: relative;
+        width: 100vw;
+        right: 0;
+        left: 0vw;
+        top: 0;
+    }
+    #myChartDownload{
+        position: fixed;
+        transform: rotate(90deg);
+        /* transform-origin: 100% 100%;
+        width: 300px;
+        height: 300px; */ 
+        
+        left: 0;
+        margin: 1px;
+    }
+}
